@@ -1,0 +1,9 @@
+# Backend
+fastapi
+uvicorn[standard]
+sqlmodel
+httpx
+
+# Frontend
+streamlit
+matplotlib
