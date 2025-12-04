@@ -1,9 +1,9 @@
 import requests
-from fastapi.openapi.utils import status_code_ranges
 from sqlmodel import Session
 from database import engine, createTable
 from models import Launch, Rocket, Cores
 from datetime import datetime
+
 
 def fetchRockets():
     print("Fetching Rockets")
@@ -112,3 +112,10 @@ def populateDatabase():
         print(f"Added {len(launchdata[:100])} launches to database")
 
     print("\nDatabase populated")
+
+if __name__ == "__main__":
+    try:
+        populateDatabase()
+    except Exception as e:
+        print(e)
+

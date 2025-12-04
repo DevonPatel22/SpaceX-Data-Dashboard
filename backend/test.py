@@ -1,50 +1,84 @@
+print("=" * 50)
+print("SCRIPT STARTING")
+print("=" * 50)
+
 import requests
+
+print("✓ Imported requests")
+
 from sqlmodel import Session
+
+print("✓ Imported Session")
+
 from database import engine, createTable
+
+print("✓ Imported database")
+
 from models import Launch, Rocket, Cores
-from datetime import datetime  # Added!
+
+print("✓ Imported models")
+
+from datetime import datetime
+
+print("✓ Imported datetime")
 
 
 def fetchRockets():
-    print("Fetching Rockets")
+    print("\n[FETCH ROCKETS] Starting...")
     url = "https://api.spacexdata.com/v4/rockets"
     response = requests.get(url)
+    print("[FETCH ROCKETS] Got response")
     response.raise_for_status()
-    return response.json()
+    data = response.json()
+    print(f"[FETCH ROCKETS] Got {len(data)} rockets")
+    return data
 
 
 def fetchCores():
-    print("Fetching Cores")
+    print("\n[FETCH CORES] Starting...")
     url = "https://api.spacexdata.com/v4/cores"
     response = requests.get(url)
+    print("[FETCH CORES] Got response")
     response.raise_for_status()
-    return response.json()
+    data = response.json()
+    print(f"[FETCH CORES] Got {len(data)} cores")
+    return data
 
 
 def fetchLaunch():
-    print("Fetching Launch")
+    print("\n[FETCH LAUNCHES] Starting...")
     url = "https://api.spacexdata.com/v4/launches"
     response = requests.get(url)
+    print("[FETCH LAUNCHES] Got response")
     response.raise_for_status()
-    return response.json()
+    data = response.json()
+    print(f"[FETCH LAUNCHES] Got {len(data)} launches")
+    return data
 
 
 def populateDatabase():
-    print("Populating Database")
-    createTable()
+    print("\n" + "=" * 50)
+    print("POPULATE DATABASE FUNCTION")
+    print("=" * 50)
 
+    print("\n[1] Creating tables...")
+    createTable()
+    print("✓ Tables created")
+
+    print("\n[2] Fetching data from API...")
     rocketsdata = fetchRockets()
     coresdata = fetchCores()
     launchdata = fetchLaunch()
+    print("✓ All data fetched")
 
-    print(f"Found {len(rocketsdata)} rockets")
-    print(f"Found {len(coresdata)} cores")
-    print(f"Found {len(launchdata)} launches")
-
+    print("\n[3] Opening database session...")
     with Session(engine) as session:
+        print("✓ Session opened")
 
-        print("\nAdding Rockets to database...")
+        print("\n[4] Adding rockets...")
+        rocket_count = 0
         for rockets_data in rocketsdata[:10]:
+            print(f"  Processing rocket {rocket_count + 1}")
             rocket = Rocket(
                 id=rockets_data['id'],
                 active=rockets_data.get('active', False),
@@ -55,15 +89,19 @@ def populateDatabase():
                 mass=float(rockets_data['mass']['kg']) if rockets_data.get('mass') else 0.0,
             )
             session.add(rocket)
+            rocket_count += 1
 
+        print(f"  Committing {rocket_count} rockets...")
         session.commit()
-        print(f"✓ Added {len(rocketsdata[:10])} rockets")
+        print(f"✓ Added {rocket_count} rockets")
 
-        print("\nAdding cores to database...")
-        cores_added = 0
+        print("\n[5] Adding cores...")
+        cores_count = 0
         for cores_data in coresdata[:50]:
+            if cores_count % 10 == 0:
+                print(f"  Processing core {cores_count + 1}")
 
-            blockValue = cores_data.get('block')  # Fixed: removed underscore
+            blockValue = cores_data.get('block')
             if blockValue is None:
                 blockValue = 0
 
@@ -76,15 +114,18 @@ def populateDatabase():
                 asdsLandings=cores_data.get('asds_landings', 0),
             )
             session.add(cores)
-            cores_added += 1
+            cores_count += 1
 
+        print(f"  Committing {cores_count} cores...")
         session.commit()
-        print(f"✓ Added {cores_added} cores to database")
+        print(f"✓ Added {cores_count} cores")
 
-        print("\nAdding Launches to database...")
+        print("\n[6] Adding launches...")
         launches_added = 0
 
-        for launch_data in launchdata[:100]:
+        for i, launch_data in enumerate(launchdata[:100]):
+            if i % 10 == 0:
+                print(f"  Checking launch {i + 1}")
 
             if not launch_data.get('cores') or len(launch_data['cores']) == 0:
                 continue
@@ -96,7 +137,6 @@ def populateDatabase():
             if not core_id:
                 continue
 
-            # Parse date - CRITICAL FIX
             date_str = launch_data.get('date_utc')
             if not date_str:
                 continue
@@ -110,7 +150,7 @@ def populateDatabase():
                 id=launch_data['id'],
                 rocketID=launch_data['rocket'],
                 coreID=core_id,
-                launchDate=launch_date,  # Now a datetime object
+                launchDate=launch_date,
                 flightNumber=launch_data.get('flight_number', 0),
                 launchSuccess=launch_data.get('success', False) if launch_data.get('success') is not None else False
             )
@@ -118,15 +158,20 @@ def populateDatabase():
             launches_added += 1
 
             if launches_added >= 15:
+                print(f"  Reached 15 launches, stopping")
                 break
 
+        print(f"  Committing {launches_added} launches...")
         session.commit()
-        print(f"✓ Added {launches_added} launches to database")
+        print(f"✓ Added {launches_added} launches")
 
-    print("\n✅ Database populated successfully!")
+    print("\n" + "=" * 50)
+    print("✅ DATABASE POPULATED SUCCESSFULLY!")
+    print("=" * 50)
 
 
 if __name__ == "__main__":
+    print("\n[MAIN] Starting execution...")
     try:
         populateDatabase()
     except Exception as e:
@@ -134,3 +179,5 @@ if __name__ == "__main__":
         import traceback
 
         traceback.print_exc()
+
+    print("\n[MAIN] Script finished")
