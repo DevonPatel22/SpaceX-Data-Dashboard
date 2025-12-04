@@ -3,6 +3,7 @@ from fastapi.openapi.utils import status_code_ranges
 from sqlmodel import Session
 from database import engine, createTable
 from models import Launch, Rocket, Cores
+from datetime import datetime
 
 def fetchRockets():
     print("Fetching Rockets")
@@ -88,11 +89,20 @@ def populateDatabase():
             if not core_id:
                 continue
 
+            date_str = launch_data.get('date_utc')
+            if not date_str:
+                continue
+
+            try:
+                launch_date = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            except:
+                continue
+
             launch = Launch(
                 id= launch_data['id'],
                 rocketID = launch_data['rocket'],
                 coreID = core_id,
-                launchDate = launch_data.get('date_utc', None),
+                launchDate = launch_date,
                 flightNumber = launch_data.get('flight_number', 0),
                 launchSuccess = launch_data.get('success', False)
             )
