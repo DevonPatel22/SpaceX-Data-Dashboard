@@ -1,6 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List
-from datetime import datetime
 
 
 class Launch(SQLModel, table = True):
@@ -8,7 +7,7 @@ class Launch(SQLModel, table = True):
     id: str | None = Field(default = None, primary_key=True)
     rocketID: str | None = Field(default = None, foreign_key = "rockets.id")
     coreID: str | None = Field(default = None, foreign_key = "cores.id")
-    launchDate: datetime
+    launchDate: str
     flightNumber: int
     launchSuccess: bool
 
