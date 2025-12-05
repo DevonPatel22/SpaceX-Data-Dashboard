@@ -71,8 +71,8 @@ def get_details(session: Session = Depends(getSession)):
                      INNER JOIN rockets ON launches.rocketID = rockets.id \
                      INNER JOIN cores ON launches.coreID = cores.id \
             """
-    result = session.exec(query)
-    data = [dict(row) for row in result]
+    result = session.execute(query)
+    data = [dict(row._mapping) for row in result]
     return{
         "count": len(data),
         "launches": data
@@ -105,13 +105,13 @@ def get_failCount(session: Session = Depends(getSession)):
 @app.get("/rockets/highStage")
 def get_highStage(session: Session = Depends(getSession)):
     maxStatement = select(func.max(Rocket.stages))
-    max = session.exec(maxStatement).one()
+    maxStages = session.exec(maxStatement).one()
 
-    statement = select(Rocket).where(Rocket.stages == max)
+    statement = select(Rocket).where(Rocket.stages == maxStages)
     rockets = session.exec(statement).all()
 
     return{
-        "highStage": max,
+        "highStage": maxStages,
         "count": len(rockets),
         "rockets": rockets
     }
