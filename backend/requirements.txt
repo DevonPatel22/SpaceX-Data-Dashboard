@@ -6,4 +6,3 @@ httpx
 
 # Frontend
 streamlit
-matplotlib
