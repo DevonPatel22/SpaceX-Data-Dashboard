@@ -27,6 +27,7 @@ SpaceX database to help program managers make better decisions for future projec
   - Pydantic
 - Frontend
   - Streamlit
+  - Pandas
 - Data Source
   - SpaceX API V4
 
