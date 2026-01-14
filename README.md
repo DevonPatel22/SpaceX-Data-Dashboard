@@ -1,8 +1,7 @@
-# IEE-305-Term-Project
+# SpaceX Data Dashboard
 
-## Team Members
+## Team Member
 - Devon Patel (dpate296)
-- Joel Cabral (jecabra3)
 
 ## Description
 SpaceX database to help program managers make better decisions for future projects based upon past successes and failures
