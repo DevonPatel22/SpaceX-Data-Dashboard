@@ -4,9 +4,6 @@ import pandas as pd
 
 st.title("SpaceX Data Logistics System")
 
-# AI used throughout this file to figure out StreamLit and properly display information
-# AI used to debug and help match the frontend to the backend and make it work after Error 500s
-
 APIUrl = "http://127.0.0.1:8000"
 
 def fetch_data(endpoint):
