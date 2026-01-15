@@ -59,8 +59,6 @@ def get_success(session: Session = Depends(getSession)):
 def get_details(session: Session = Depends(getSession)):
     launches = session.exec(select(Launch)).all()
 
-    #AI Prompt was used here to properly figure out how to filter the launches with cores and rockets
-
     result = []
     for launch in launches:
         rocket = session.exec(select(Rocket).where(Rocket.id == launch.rocketID)).first()
