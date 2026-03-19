@@ -38,8 +38,8 @@ SpaceX database to help program managers make better decisions for future projec
 
 ### Step 1 : Clone the Repository
 ```bash
-git clone https://github.com/yourusername/IEE-305-Term-Project.git
-cd IEE-305-Term-Project
+git clone https://github.com/yourusername/SpaceX-Data-Dashboard.git
+cd SpaceX-Data-Dashboard
 ```
 
 ### Step 2 : Create Virtual Environment
