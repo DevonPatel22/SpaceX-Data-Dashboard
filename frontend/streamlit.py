@@ -26,7 +26,7 @@ with col1:
 
 with col2:
     data = fetch_data("/launches/countSuccess")
-    if data and "totalCSuccessCount" in data:
+    if data and "totalSuccessCount" in data:
         st.metric("Total Successes", data["totalSuccessCount"])
 
 with col3:
