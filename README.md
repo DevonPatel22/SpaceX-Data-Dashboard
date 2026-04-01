@@ -156,7 +156,7 @@ CREATE TABLE "Cores" (
 ## Project Structure
 
 ```
-IEE-305-Term-Project/
+SpaceX-Data-Dashboard/
 ├── backend/
 │   ├── main.py              # FastAPI application
 │   ├── models.py            # Database models
