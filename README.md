@@ -89,7 +89,7 @@ http://127.0.0.1:8000/docs
 ### Start Frontend
 ```bash
 cd frontend
-streamlit run app.py
+streamlit run streamlit.py
 ```
 
 ## API Documentation
